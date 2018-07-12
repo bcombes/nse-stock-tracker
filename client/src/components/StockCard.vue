@@ -1,10 +1,11 @@
 <template>
-     <div :class="trend_indicator" class="has-text-light column is-2 is-inline-block-mobile" @click="onCardClicked">
+     <div :class="trend_color" class="has-text-light column is-2 is-inline-block-mobile" @click="onCardClicked">
       <p class="title is-6 has-text-light has-text-weight-bold"> {{ stock.symbol }} </p>
-      <p class="subtitle is-7 has-text-light has-text-weight-bold"> &#x20a6;{{ stock.close | toTwoDecimalPlaces }}</p>  <!-- price --> 
-      <span class="icon">
-        <i class="fas fa-angle-double-up"></i>
+      <p class="subtitle is-7 has-text-light has-text-weight-bold"> &#x20a6;{{ stock.close | toTwoDecimalPlaces }}</p> 
+      <span class="icon" style="font-size: 1.5em;" >
+        <i :class="trend_indicator" class="fas"></i>
       </span>
+ <!-- price --> 
       <p class="change is-size-7" > {{ stock.movement }}</p>
       <p class="percent is-size-7" >{{ stock.percent_movement }}%</p>  <!-- percentage change -->  
       <p class="volume is-size-7">{{ stock.volume | addCommaSeparator }}</p> <!-- volume --> 
@@ -29,16 +30,20 @@
     	},
     	data() {
     		return {
-    			trend_indicator:''
+    			trend_indicator:'',
+    			trend_color:''
     		}
     	},
     	mounted() {
     		if(this.stock.movement > 0) {
-    			this.trend_indicator = "has-background-primary";
+    			this.trend_color = "has-background-primary";
+    			this.trend_indicator = "fa-angle-double-up";
     		} else if(this.stock.movement < 0) {
-    			this.trend_indicator = "has-background-danger";
+    			this.trend_color = "has-background-danger";
+    			this.trend_indicator = "fa-angle-double-down";
     		} else {
-    			this.trend_indicator = "has-background-info";
+    			this.trend_color = "has-background-info";
+    			this.trend_indicator = "fa-minus";
     		}
     	}
 	}
@@ -52,9 +57,7 @@
 	}
 	.percent, .change {
 	  float:right;
-	}
-	.percent {
-	  clear: both;
+	  clear:both;
 	}
 
 	.column {
@@ -62,9 +65,14 @@
 	  margin: 5px 5px;
 	}
 	.icon {
-	  float: left;
+	  float: right;
+	  clear: none;
 	}
 	/*
+	.subtitle {
+		display: inline;
+	}
+	
 	.box:not(:last-child) {
   		margin-bottom: 0;
   	}*/
