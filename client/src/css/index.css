@@ -1,0 +1,33 @@
+
+
+.container {
+  padding: 10px 10px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.volume {
+  display: inline;
+  float: left;
+  clear: left;
+}
+.percent, .change {
+  float:right;
+}
+.percent {
+  clear: both;
+}
+
+.column {
+  font-weight: bold;
+}
+.icon {
+  float: left;
+}
+/*
+ Don't know why Bulma adds this to non-last child elements 
+.box:not(:last-child) {
+  margin-bottom: 0;
+} */
