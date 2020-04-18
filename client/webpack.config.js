@@ -4,7 +4,7 @@ var webpack = require('webpack')
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, '../public/js'), 
+    path: path.resolve(__dirname, '../public/js'),
     /*publicPath: '/dist/', 
     path: path.resolve(__dirname, 'dist'), */
     filename: 'main.js'
@@ -72,7 +72,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.js'
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
@@ -105,6 +105,6 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.LoaderOptionsPlugin({
       minimize: true
     }), 
-    new webpack.NamedModulesPlugin()
+    /*new webpack.NamedModulesPlugin()*/
   ])
 }

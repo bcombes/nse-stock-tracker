@@ -31,25 +31,35 @@
     <section class="section">
       <!--<div class="columns is-multiline is-mobile"> -->
         <paginate name="filteredStocks" :list="filteredStocks" tag="div" class="columns is-multiline is-mobile" :per="20">
-          <stock-card v-for="stock in paginated('filteredStocks')" :key="stock.symbol" :stock="stock" @stock-card-clicked="onCardClicked"></stock-card> 
+          <stock-card v-for="stock in paginated('filteredStocks')" :key="stock.symbol" :stock="stock" @stock-card-clicked="symbol => onCardClicked(symbol)"></stock-card> 
         </paginate>
-      <!--</div>-->
+      <!--</div> -->
       <div class="container has-text-centered has-text-weight-bold">
         <paginate-links for="filteredStocks" :show-step-links="true" :step-links="{ next: '>>', prev: '<<' }" ></paginate-links>
       </div> 
     </section>
+    <footer class="footer">
+      <div class="content has-text-centered">
+        <p>
+          <strong>NSE Watcher</strong> by <a href="https://bayopuddy.com">Bayo Puddy</a>. All rights reserved &copy;.
+        </p>
+      </div>
+    </footer>
+    <stock-history-modal :symbol="selectedSymbol"></stock-history-modal>
   </div>  
 </template>
 
 <script>
   import StockCard from './components/StockCard.vue'
+  import StockHistoryModal from './components/StockHistoryModal.vue'
 
   export default {
     name: 'app',
-    components: { StockCard },
+    components: { StockCard, StockHistoryModal },
     methods: {
-      onCardClicked() {
-        alert('Hello')
+      onCardClicked(symbol) {
+        this.selectedSymbol = symbol
+        //alert('Hello ' + symbol)
       },
     },
     computed: {
@@ -59,6 +69,7 @@
         let queriedStocks = [];
         if(_query != null && _query  != '') {
           queriedStocks =  this.stocks.filter(stock => stock.symbol.toLowerCase().includes(_query.toLowerCase()));  
+          //console.log('filter result:', queriedStocks);
         } else {
           queriedStocks = this.stocks;
         }
@@ -78,9 +89,11 @@
               .sort((a,b) => a.movement - b.movement)
             break;  
           default:
+            //console.log('hello')
             filteredStocks = queriedStocks;
             break;  
         }
+        //console.log('filter result:', filteredStocks);
         return filteredStocks;
       }
     },
@@ -88,27 +101,28 @@
       axios
         .get('/pricelist')
           .then(response => {
-            console.log(response)
+            //console.log(response)
             this.stocks = response.data.stocks
           })
           .catch(error => console.log(error))
           .finally(() => console.log('finally...'))
 
-    },
+    }, 
     data() {
       return {
         stocks : [{ close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
         { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500},
-        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"ABBEYBDS", value:1860, volume:1500}],
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"BEYBDS", value:1860, volume:1500},
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"CEYBDS", value:1860, volume:1500},
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"FEYBDS", value:1860, volume:1500},
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"DFYBDS", value:1860, volume:1500},
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"GHYBDS", value:1860, volume:1500},
+        { close:"1.3", date:"2018-06-25T00:00:00Z", high:1.3, low:1.3, movement:0, open:1.3, percent_movement:0, prev_close:1.3, symbol:"IEYBDS", value:1860, volume:1500}],
+        selectedSymbol: '',
         query: '',
         stockFilters: ['All', 'Most Traded', 'Biggest Gainers', 'Biggest Losers'],
         activeFilter: 0,
-        paginate: ['filteredStocks']
+        paginate: ['filteredStocks'],
       }
     }
   }
